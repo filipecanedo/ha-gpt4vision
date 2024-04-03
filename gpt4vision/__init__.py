@@ -27,7 +27,8 @@ def setup(hass, config):
         tts = str(config[DOMAIN][CONF_TTS]) # Choose HA TTS Service. Example: cloud_say
         
         # Get data from Service Call
-        media_id = data_call.data.get(CONF_PLAYER_ID) # Entity ID of media device. Can be a single device or a group.
+        if (CONF_PLAYER_ID != ""):
+          media_id = data_call.data.get(CONF_PLAYER_ID) # Entity ID of media device. Can be a single device or a group.
         image_path = data_call.data.get(CONF_IMAGE_FILE) # Local path to your image. Example: "/config/www/images/doorbell_snapshot.jpg"
         cache_opt = bool(data_call.data.get(CONF_CACHE)) # TTS cache, can be true or false
         max_tokens = int(data_call.data.get(CONF_MAXTOKENS)) # Maximum number of tokens used by model. Test around 300
@@ -66,8 +67,9 @@ def setup(hass, config):
             
         hass.bus.async_fire("gpt4vision", {"result": response_text})
         
-        # Call TTS service from Home Assistant with the content of the AI response message
-        service_data = {"entity_id": media_id, "cache": cache_opt, "message": response_text}
-        hass.services.call('tts', tts, service_data)
+        if (CONF_PLAYER_ID != ""):
+          # Call TTS service from Home Assistant with the content of the AI response message
+          service_data = {"entity_id": media_id, "cache": cache_opt, "message": response_text}
+          hass.services.call('tts', tts, service_data)
     hass.services.register(DOMAIN, "image_analyzer", image_analyzer)
     return True
