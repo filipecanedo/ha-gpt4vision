@@ -27,8 +27,9 @@ image_analyzer:
         text:
           multiline: false
     entity_id:
-      required: true
-      example: media_player.speaker
+      required: false
+      example: "If set, result will be sent to the media_player by TTS service. E.g.: media_player.speaker"
+      default: ""
       selector:
         entity:
           filter:
